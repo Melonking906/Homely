@@ -1,0 +1,16 @@
+name: Homely
+main: io.loyloy.homely.Homely
+version: ${project.version}
+description: Simple SQL homes plugin.
+author: Melonking
+
+commands:
+   homely:
+      description: Homely Help
+      usage: /<command>
+      aliases:
+      - h
+
+permissions:
+    homely.help:
+        default: true
