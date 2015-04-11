@@ -12,14 +12,18 @@ import java.util.Date;
 public abstract class SQL
 {
     private Connection connection;
+
     private HashMap<UUID,List<Home>> userHomesCache;
+    private HashMap<UUID,String> userIdsCache;
 
     protected Homely plugin;
 
     public SQL( Homely plugin )
     {
         this.plugin = plugin;
+
         this.userHomesCache = new HashMap<UUID,List<Home>>();
+        this.userIdsCache = new HashMap<UUID,String>();
 
         plugin.getServer().getScheduler().runTaskTimerAsynchronously( plugin, new Runnable()
         {
@@ -243,12 +247,21 @@ public abstract class SQL
 
     private String getUserId( UUID uuid )
     {
+        if( userIdsCache.containsKey( uuid ) )
+        {
+            return userIdsCache.get( uuid );
+        }
+
         ArrayList<HashMap<String,String>> data = query( "SELECT user_id FROM homely_users WHERE uuid = '"+uuid.toString()+"'", true );
         if( data == null )
         {
             return null;
         }
 
-        return data.get( 0 ).get( "user_id" );
+        String user_id = data.get( 0 ).get( "user_id" );
+
+        userIdsCache.put( uuid, user_id );
+
+        return user_id;
     }
 }
